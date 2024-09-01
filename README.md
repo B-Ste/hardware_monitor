@@ -1,1 +1,1 @@
-# hardware_monitor
+Hardware Monitor
