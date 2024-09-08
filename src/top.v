@@ -10,12 +10,13 @@ module top (
 );
 
 reg [15:0]pixel;
-wire [14:0] adr;
+wire [7:0]row;
+wire [7:0]column;
 
-lcd114 lcd(clk, resetn, lcd_resetn, lcd_clk, lcd_cs, lcd_rs, lcd_data, pixel, adr);
+lcd114 lcd(clk, resetn, lcd_resetn, lcd_clk, lcd_cs, lcd_rs, lcd_data, pixel, row, column);
 
-always @(adr) begin
-    if ((adr % 240) == 0) pixel <= 16'hf034;
+always @(row, column) begin
+    if (row < 20 && column < 20) pixel <= 16'hf034;
     else pixel <= 0;
 end
     
@@ -34,7 +35,8 @@ module lcd114(
 	output lcd_data,
 
     input [15:0]pixel_in,
-    output reg [14:0]adr
+    output reg [7:0]row,
+    output reg [7:0]column
 );
 
 localparam MAX_CMDS = 69;
@@ -197,7 +199,8 @@ always@(posedge clk or negedge resetn) begin
 		lcd_reset_r <= 0;
 		spi_data <= 8'hFF;
 		bit_loop <= 0;
-        adr <= 1;
+        row <= 0;
+        column <= 1;
 
 	end else begin
 
@@ -294,8 +297,11 @@ always@(posedge clk or negedge resetn) begin
                     lcd_rs_r <= 1;
                     bit_loop <= 0; // next pixel
                     pixel <= pixel_buf;
-                    if (adr == 32399) adr <= 0;
-                    else adr <= adr + 1;
+                    if (column == 239) begin
+                        if (row == 134) row <= 0;
+                        else row <= row +1;
+                        column <= 0;
+                    end else column <= column + 1;
                 end else begin
                     // loop
                     spi_data <= { spi_data[6:0], 1'b1 };
