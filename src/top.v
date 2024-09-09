@@ -1,4 +1,4 @@
-module top (
+module monitor (
     input clk,
 	input resetn,
 
@@ -53,9 +53,13 @@ integer k;
 
 always @(row, column) begin
     if (column < BLOCKWIDTH) begin
-        // draw colored squares at beginning of row
+        // draw colored (index) squares at beginning of row
 		if (row < (BLOCKWIDTH*8 - 1)) pixel <= ROWCOLS[row[6:4]];
 		else pixel <= 0;
+	end else if (column < (BLOCKWIDTH * 9) && row < (BLOCKWIDTH * 8)) begin
+		//draw value in buffer register on corresponding place at lcd
+		if (buffer[row[6:4]][8 - column[6:4]] == 1) pixel <= 16'hffff;
+		else pixel <= 16'h8888;
     end else pixel <= 0;
 end
     
