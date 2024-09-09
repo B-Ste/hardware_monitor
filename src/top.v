@@ -19,14 +19,8 @@ module top (
 );
 
 localparam BLOCKWIDTH = 16;
-localparam ROWCOL_0 = 16'hf800;
-localparam ROWCOL_1 = 16'hfd20;
-localparam ROWCOL_2 = 16'hff40;
-localparam ROWCOL_3 = 16'h3fe0;
-localparam ROWCOL_4 = 16'h07fd;
-localparam ROWCOL_5 = 16'h069f;
-localparam ROWCOL_6 = 16'h029f;
-localparam ROWCOL_7 = 16'hd81f;
+
+localparam [15:0]ROWCOLS[7:0] = '{16'hf800, 16'hfd20, 16'hff40, 16'h3fe0, 16'h07fd, 16'h069f, 16'h029f, 16'hd81f};
 
 reg [7:0]buffer[7:0];
 
@@ -58,17 +52,10 @@ end
 integer k;
 
 always @(row, column) begin
-    // draw colored squares at beginning of row
     if (column < BLOCKWIDTH) begin
-        if (row < BLOCKWIDTH) pixel <= ROWCOL_0;
-        else if (row >= BLOCKWIDTH && row < (BLOCKWIDTH * 2)) pixel <= ROWCOL_1;
-        else if (row >= (BLOCKWIDTH * 2) && row < (BLOCKWIDTH * 3)) pixel <= ROWCOL_2;
-        else if (row >= (BLOCKWIDTH * 3) && row < (BLOCKWIDTH * 4)) pixel <= ROWCOL_3;
-        else if (row >= (BLOCKWIDTH * 4) && row < (BLOCKWIDTH * 5)) pixel <= ROWCOL_4;
-        else if (row >= (BLOCKWIDTH * 5) && row < (BLOCKWIDTH * 6)) pixel <= ROWCOL_5;
-        else if (row >= (BLOCKWIDTH * 6) && row < (BLOCKWIDTH * 7)) pixel <= ROWCOL_6;
-        else if (row >= (BLOCKWIDTH * 7) && row < (BLOCKWIDTH * 8)) pixel <= ROWCOL_7;
-        else pixel <= 0;
+        // draw colored squares at beginning of row
+		if (row < (BLOCKWIDTH*8 - 1)) pixel <= ROWCOLS[row[6:4]];
+		else pixel <= 0;
     end else pixel <= 0;
 end
     
