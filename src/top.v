@@ -20,7 +20,7 @@ module monitor (
 
 localparam BLOCKWIDTH = 16;
 
-localparam [15:0]ROWCOLS[7:0] = '{16'hf800, 16'hfd20, 16'hff40, 16'h3fe0, 16'h07fd, 16'h069f, 16'h029f, 16'hd81f};
+localparam [15:0]ROWCOLS[0:7] = '{16'hf800, 16'hfd20, 16'hff40, 16'h3fe0, 16'h07fd, 16'h069f, 16'h029f, 16'hd81f};
 
 reg [7:0]buffer[7:0];
 
