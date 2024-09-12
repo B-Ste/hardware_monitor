@@ -58,8 +58,9 @@ always @(row, column) begin
 		else pixel <= 0;
 	end else if (column < (BLOCKWIDTH * 9) && row < (BLOCKWIDTH * 8)) begin
 		//draw value in buffer register on corresponding place at lcd
-		if (buffer[row[6:4]][8 - column[6:4]] == 1) pixel <= 16'hffff;
-		else pixel <= 16'h8888;
+        if ((column % BLOCKWIDTH) == 0 || (row % BLOCKWIDTH) == 0) pixel <= 16'b1111100000000000;
+		else if (buffer[row[6:4]][8 - column[6:4]] == 1) pixel <= 16'hffff;
+		else pixel <= 0;
     end else pixel <= 0;
 end
     
